@@ -1,0 +1,29 @@
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Go binaries and build output
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+bin/
+build/
+dist/
+/repoPattern/repoPattern
+
+# Test coverage and profiling output
+coverage/
+coverage.out
+coverage.txt
+coverage.html
+*.prof
+
+# Operating system files
+.DS_Store
+Thumbs.db
