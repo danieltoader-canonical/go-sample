@@ -30,6 +30,8 @@ make down
 `make start` waits for PostgreSQL and Redis to become healthy before running the
 CLI. `make run` uses existing services; `make down` preserves database volumes.
 These targets also work from the repository root via its delegating Makefile.
+It defaults to `PROJECT=repoPattern`; use `PROJECT=cmdPattern` to select the
+standalone Command Pattern sample instead.
 
 Start PostgreSQL and Redis with Docker Compose:
 

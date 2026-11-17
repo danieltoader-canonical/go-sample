@@ -1,14 +1,39 @@
-# go-sample
+# Go Samples
 
-A collection of Go sample patterns that might be useful.
+Small, standalone Go examples of useful application patterns. Choose a sample
+from the contents table to read its detailed guide.
 
+## Contents
 
-- [Repository Pattern](repoPattern/README.md)
+| Pattern | What it demonstrates | Guide |
+| --- | --- | --- |
+| Repository Pattern | PostgreSQL data access, cache decorators, and storage interfaces | [repoPattern/README.md](repoPattern/README.md) |
+| Command Pattern | A Cobra CLI with command groups, version reporting, and explicit wiring | [cmdPattern/README.md](cmdPattern/README.md) |
 
-From the repository root, use `make start` to start PostgreSQL and Redis and run
-the Repository Pattern sample. Use `make run ARGS='--customer-id 1'` against
-existing services, and `make down` to stop them without deleting database data.
-Docker with Compose, Go (see `repoPattern/go.mod`), and Make are required.
+## Running a sample
 
-The root Makefile delegates to `repoPattern/Makefile`. Both support `make test`,
-`make bench`, `make generate`, and `make help`.
+You need Go and Make. The Repository Pattern also requires Docker Compose to
+start PostgreSQL and Redis; the Command Pattern has no external service
+dependencies.
+
+From the repository root, Make uses the Repository Pattern by default. For
+example:
+
+```sh
+make start
+make run ARGS='--customer-id 1'
+make test
+make down
+```
+
+Select the Command Pattern with `PROJECT=cmdPattern`:
+
+```sh
+make PROJECT=cmdPattern start
+make PROJECT=cmdPattern run ARGS='command get-version'
+make PROJECT=cmdPattern test
+```
+
+Both samples support `start`, `run`, `test`, `bench`, `generate`, and `help`.
+Only the Repository Pattern provides `up` and `down` targets. You can also run
+Make from either sample directory without setting `PROJECT`.
