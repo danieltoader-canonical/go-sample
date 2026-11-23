@@ -9,6 +9,7 @@ from the contents table to read its detailed guide.
 | --- | --- | --- |
 | Repository Pattern | PostgreSQL data access, cache decorators, and storage interfaces | [repoPattern/README.md](repoPattern/README.md) |
 | Command Pattern | A Cobra CLI with command groups, version reporting, and explicit wiring | [cmdPattern/README.md](cmdPattern/README.md) |
+| Mutation Testing | Test invoice rules against small changes to their logic | [mutationTesting/README.md](mutationTesting/README.md) |
 
 ## Running a sample
 
@@ -34,6 +35,17 @@ make PROJECT=cmdPattern run ARGS='command get-version'
 make PROJECT=cmdPattern test
 ```
 
-Both samples support `start`, `run`, `test`, `bench`, `generate`, and `help`.
-Only the Repository Pattern provides `up` and `down` targets. You can also run
-Make from either sample directory without setting `PROJECT`.
+The Repository and Command Pattern samples support `start`, `run`, `test`,
+`bench`, `generate`, and `help`. Only the Repository Pattern provides `up` and
+`down` targets. You can also run Make from either sample directory without
+setting `PROJECT`.
+
+The Mutation Testing example provides `test` and `mutate` targets:
+
+```sh
+make PROJECT=mutationTesting test
+make PROJECT=mutationTesting mutate
+```
+
+Use `test-weak` and `mutate-weak` to compare an intentionally incomplete test
+suite; the latter reports surviving mutations.

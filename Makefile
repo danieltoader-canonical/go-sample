@@ -2,7 +2,7 @@
 
 PROJECT ?= repoPattern
 
-.PHONY: help start run up down test bench generate
+.PHONY: help start run up down test test-weak bench generate mutate mutate-weak mutate-diff
 
-help start run up down test bench generate:
+help start run up down test test-weak bench generate mutate mutate-weak mutate-diff:
 	$(MAKE) -C $(PROJECT) $@
