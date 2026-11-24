@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package samples.cache;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "dataSerializationForCache/internal/serializer/invoicepb";
+
+message Invoice {
+  string id = 1;
+  string customer_id = 2;
+  string currency = 3;
+  google.protobuf.Timestamp issued_at = 4;
+  bool paid = 5;
+  repeated Line lines = 6;
+}
+
+message Line {
+  string sku = 1;
+  string description = 2;
+  int32 quantity = 3;
+  int64 unit_price_cents = 4;
+}
