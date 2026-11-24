@@ -1,3 +1,5 @@
+name: data-serialization-cache
+
 services:
   valkey:
     image: valkey/valkey:8-alpine

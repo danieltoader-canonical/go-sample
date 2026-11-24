@@ -20,11 +20,14 @@ func main() {
 }
 
 func newRepository(ctx context.Context) (customer.Repository, func(), error) {
-	client, err := postgres.NewClient(ctx, envOrDefault("POSTGRES_URI", "postgres://postgres@localhost:5432/sample?sslmode=disable"))
+	client, err := postgres.NewClient(ctx, envOrDefault("POSTGRES_URI", "postgres://postgres@localhost:"+envOrDefault("POSTGRES_PORT", "5432")+"/sample?sslmode=disable"))
 	if err != nil {
 		return nil, nil, err
 	}
-	store, err := kvstore.NewRedisStore(kvstore.Config{Addrs: []string{envOrDefault("REDIS_ADDR", "localhost:6379")}})
+	store, err := kvstore.NewValKeyStore(
+		kvstore.Config{Addrs: []string{envOrDefault("VALKEY_ADDR", "localhost:"+envOrDefault("VALKEY_PORT", "6379"))}},
+		kvstore.WithCacheKeyPrefix("repoPattern:"),
+	)
 	if err != nil {
 		client.Close()
 		return nil, nil, err

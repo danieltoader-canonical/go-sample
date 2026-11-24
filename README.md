@@ -15,8 +15,11 @@ from the contents table to read its detailed guide.
 ## Running a sample
 
 You need Go and Make. The Repository Pattern also requires Docker Compose to
-start PostgreSQL and Redis, and Data Serialization for Cache requires it to start
-Valkey. The Command Pattern has no external service dependencies.
+start PostgreSQL and Valkey, and Data Serialization for Cache requires it to
+start Valkey. Their Valkey ports are separate (6379 and 6380), so both samples
+can run at the same time. Set `POSTGRES_PORT` and `VALKEY_PORT` to choose
+different host ports when they conflict with other local services. The Command
+Pattern has no external service dependencies.
 
 From the repository root, Make uses the Repository Pattern by default. For
 example:

@@ -9,9 +9,9 @@ BENCHTIME ?= 1s
 
 help:
 	@printf '%s\n' \
-		'make start     Start PostgreSQL and Redis, then run the sample' \
+		'make start     Start PostgreSQL and Valkey, then run the sample' \
 		'make run       Run against existing services (ARGS="--customer-id 1")' \
-		'make up        Start PostgreSQL and Redis and wait until healthy' \
+		'make up        Start PostgreSQL and Valkey and wait until healthy' \
 		'make down      Stop services without deleting database volumes' \
 		'make test      Run Go tests' \
 		'make bench     Run benchmarks with allocation statistics (BENCH=. BENCHTIME=1s)' \

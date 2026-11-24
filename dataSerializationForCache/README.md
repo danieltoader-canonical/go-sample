@@ -15,9 +15,12 @@ make down
 ```
 
 `make start` runs `make up` first, then `compare`. Set `VALKEY_PORT` to
-publish a different port and pass the matching address with `--addr 127.0.0.1:<port>`.
-The default port is 6380 so this sample can run alongside the Redis container
-from `repoPattern`, which uses 6379.
+publish a different port; the CLI uses that port by default. `VALKEY_ADDR` or
+`--addr` can override the address.
+The default port is 6380; `repoPattern` uses 6379. Each Compose project has an
+explicit distinct name, and this sample prefixes its Valkey keys with
+`dataSerializationForCache:` so the projects remain isolated even if configured
+to share a Valkey instance.
 
 Example output:
 

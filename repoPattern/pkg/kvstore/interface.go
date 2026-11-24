@@ -9,7 +9,7 @@ import (
 
 // Store is a minimal key/value storage abstraction used across the project.
 // Implementations: redis (go-redis), valkey (valkey-go), mem (hypermodeinc/ristretto).
-// Methods are intentionally aligned with common Redis semantics.
+// Methods are intentionally aligned with common Redis-compatible semantics.
 // All methods should be safe for concurrent use.
 //
 // Notes:
@@ -21,7 +21,7 @@ import (
 //   - Incr creates the key with value 1 if it does not exist.
 //   - Del returns the number of removed keys.
 //   - TTL returns remaining time to live or a negative value if no TTL is set; implementations may return (0, ErrNotFound) if the key does not exist.
-//     We avoid importing redis.Nil here and define ErrNotFound locally to keep the interface generic.
+//     We define ErrNotFound locally to keep the interface independent of backend-specific sentinels.
 type Store interface {
 	Get(ctx context.Context, key string) (string, error)
 	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error
@@ -40,7 +40,7 @@ type Store interface {
 	pkAll(keys []string) []string
 }
 
-// Config contains generic connection options used by Redis/Valkey implementations.
+// Config contains generic connection options used by Redis and Valkey implementations.
 // For cluster deployments, provide multiple Addrs.
 // For single node deployments, provide a single Addr.
 // TLS controls whether to use TLS when connecting.
@@ -71,7 +71,7 @@ type KVOptions struct {
 // Use With* helpers to configure the store behavior in constructors.
 // Example:
 //
-//	NewRedisStore(cfg, WithCacheKeyPrefix("app:"), WithReadTimeout(50*time.Millisecond))
+//	NewValKeyStore(cfg, WithCacheKeyPrefix("app:"), WithReadTimeout(50*time.Millisecond))
 //
 // Zero values are respected: passing a zero duration means no timeout.
 // If the same option is applied multiple times, the last one wins.

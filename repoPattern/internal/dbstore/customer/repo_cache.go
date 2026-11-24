@@ -58,7 +58,7 @@ func (r *RepoCache) GetCustomer(ctx context.Context, customerId int) Customer {
 	if customer.CustomerId != 0 {
 		data, err := json.Marshal(customer)
 		if err == nil {
-			// Use a string so Redis, Valkey and memory stores share the same encoding.
+			// Use a string so Valkey and memory stores share the same encoding.
 			err = r.storage.Set(ctx, key, string(data), customerCacheTTL)
 		}
 		if err != nil {

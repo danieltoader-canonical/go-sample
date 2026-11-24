@@ -12,7 +12,7 @@ import (
 )
 
 // ValKeyStore implements Store using valkey-go client, supporting cluster and single-node setups.
-// We attempt to mimic go-redis UniversalClient behavior: if multiple Addrs are provided, use cluster client.
+// Multiple addresses enable cluster-aware connections.
 type ValKeyStore struct {
 	client valkey.Client
 	opts   KVOptions

@@ -6,14 +6,14 @@ useful in your own projects.
 
 The example includes:
 
-- A customer repository using `jackc/pgx/v5` and a connection pool, with Redis caching.
+- A customer repository using `jackc/pgx/v5` and a connection pool, with Valkey caching.
 - A `kvstore.Store` interface with Redis, Valkey, and in-memory implementations.
 - Generated GoMock repository and storage mocks, with Testify assertions.
 - A Cobra CLI for reading a customer or updating their name.
 
 `internal/cmd/root` owns the Cobra command, flags, and JSON output.
 `cmd/app` wires PostgreSQL,
-Redis, and the cached repository, including cleanup. Connections are opened only
+Valkey, and the cached repository, including cleanup. Connections are opened only
 after command arguments have been validated, not for `--help`.
 
 ## Run
@@ -27,13 +27,13 @@ make run ARGS='--customer-id 1 --name "Alice"'
 make down
 ```
 
-`make start` waits for PostgreSQL and Redis to become healthy before running the
+`make start` waits for PostgreSQL and Valkey to become healthy before running the
 CLI. `make run` uses existing services; `make down` preserves database volumes.
 These targets also work from the repository root via its delegating Makefile.
 It defaults to `PROJECT=repoPattern`; use `PROJECT=cmdPattern` to select the
 standalone Command Pattern sample instead.
 
-Start PostgreSQL and Redis with Docker Compose:
+Start PostgreSQL and Valkey with Docker Compose:
 
 ```sh
 docker compose up -d --wait
@@ -55,8 +55,14 @@ go test ./...
 Alternatively, use `make test`.
 
 The defaults connect to PostgreSQL using
-`postgres://postgres@localhost:5432/sample?sslmode=disable` and Redis at
-`localhost:6379`. Override them with `POSTGRES_URI` and `REDIS_ADDR`.
+`postgres://postgres@localhost:5432/sample?sslmode=disable` and Valkey at
+`localhost:6379`. Override them with `POSTGRES_URI` and `VALKEY_ADDR`. Compose
+publishes PostgreSQL on `POSTGRES_PORT` (default `5432`) and Valkey on
+`VALKEY_PORT` (default `6379`); the Data Serialization sample uses `6380`, so
+both samples can run side by side. The app uses those port variables for its
+default connection addresses. Compose resources are scoped under the
+`repo-pattern` project name, and this sample prefixes cache keys with
+`repoPattern:` to avoid key collisions when sharing a Valkey instance.
 PostgreSQL initialization creates the `customer` table and seeds customer `1`
 when the database volume is first created. The Compose database uses trust
 authentication and a loopback-only port for local development; use credentials
@@ -82,12 +88,12 @@ It uses temporary customer IDs and deletes its own rows afterward. Without
 `POSTGRES_TEST_URI`, only this integration test is skipped; unit tests use GoMock.
 Existing MongoDB data is not migrated. Old MongoDB containers and volumes are
 not removed automatically; the new setup uses a separate PostgreSQL volume.
-Existing Redis entries also remain until their TTL expires; use a fresh Redis
-instance or explicitly invalidate customer keys when switching an existing dataset.
+Existing cache entries remain until their TTL expires; entries written by the old
+unprefixed Redis setup are not read by this Valkey-backed sample.
 
 ## Benchmarks
 
-Run the benchmarks without PostgreSQL, Redis, or Docker:
+Run the benchmarks without PostgreSQL, Valkey, or Docker:
 
 ```sh
 make bench

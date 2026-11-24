@@ -15,8 +15,8 @@ import (
 	"dataSerializationForCache/pkg/kvstore"
 )
 
-// defaultAddr is the Valkey address published by compose.yaml (port 6380 avoids clashing with repoPattern).
-const defaultAddr = "127.0.0.1:6380"
+// defaultAddr follows the Valkey host port published by compose.yaml.
+var defaultAddr = envOrDefault("VALKEY_ADDR", "127.0.0.1:"+envOrDefault("VALKEY_PORT", "6380"))
 
 // connectFunc opens a kvstore.Store. Tests pass one that returns kvstore.MemStore or a mock.
 type connectFunc func(addr string) (kvstore.Store, error)
@@ -34,8 +34,16 @@ func main() {
 func connectValkey(addr string) (kvstore.Store, error) {
 	return kvstore.NewValKeyStore(
 		kvstore.Config{Addrs: []string{addr}},
+		kvstore.WithCacheKeyPrefix("dataSerializationForCache:"),
 		kvstore.WithTimeouts(time.Second, time.Second, time.Second),
 	)
+}
+
+func envOrDefault(key, fallback string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return fallback
 }
 
 // newRootCmd builds `cli` with the store, fetch and compare subcommands.
